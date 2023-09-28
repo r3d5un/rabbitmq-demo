@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	conn, err := amqp.Dial("amqp://rabbitmq:rabbitmq@localhost:5672")
+	conn, err := amqp.Dial("amqp://rabbitmq:rabbitmq@rabbitmq:5672")
 	if err != nil {
 		log.Panicf("Failed to connect to RabbitMQ: %v", err)
 	}
