@@ -12,3 +12,20 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=rabbitmq
+  sender:
+    build:
+      context: .
+      dockerfile: sender.Dockerfile
+    depends_on:
+      - rabbitmq
+    container_name: 'sender'
+    restart: always
+  receiver:
+    build:
+      context: .
+      dockerfile: receiver.Dockerfile
+    depends_on:
+      - rabbitmq
+      - sender
+    container_name: 'receiver'
+    restart: always
