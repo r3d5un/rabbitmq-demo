@@ -7,11 +7,11 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/sender/send.go
+RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/worker/worker.go
 
 # RUNNER
 FROM alpine:latest
 WORKDIR app
-COPY --from=base /app/send .
+COPY --from=base /app/worker .
 
-CMD [ "./send" ]
+CMD [ "./worker" ]

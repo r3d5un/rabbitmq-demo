@@ -7,11 +7,11 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/receiver/receive.go
+RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/new_task/new_task.go
 
 # RUNNER
 FROM alpine:latest
 WORKDIR app
-COPY --from=base /app/receive .
+COPY --from=base /app/new_task .
 
-CMD [ "./receive" ]
+CMD [ "./new_task" ]
