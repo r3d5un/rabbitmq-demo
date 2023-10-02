@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -22,12 +23,12 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"Hello, World!", // name
-		false,           // durable
-		false,           // delete when unused
-		false,           // exclusive
-		false,           // no-wait
-		nil,             // arguments
+		"task_queue", // name
+		true,         // durable
+		false,        // delete when unused
+		false,        // exclusive
+		false,        // no-wait
+		nil,          // arguments
 	)
 	if err != nil {
 		log.Panicf("Failed to declare a queue: %v", err)
@@ -36,16 +37,17 @@ func main() {
 	defer cancel()
 
 	for i := 0; ; i++ {
-		body := "Message " + string(i)
+		body := fmt.Sprintf("Message %d", i)
 		err = ch.PublishWithContext(
 			ctx,
 			"",     // exchange
 			q.Name, // routing key
 			false,  // mandatory
-			false,  // immediate
+			false,
 			amqp.Publishing{
-				ContentType: "text/plain",
-				Body:        []byte(body),
+				DeliveryMode: amqp.Persistent,
+				ContentType:  "text/plain",
+				Body:         []byte(body),
 			})
 		if err != nil {
 			log.Panicf("Failed to publish a message: %v", err)
